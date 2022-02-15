@@ -1,30 +1,22 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <router-view />
+  <Tabbar route>
+    <TabbarItem replace to="/" icon="home-o">首页</TabbarItem>
+    <TabbarItem replace to="/about" icon="search">关于</TabbarItem>
+  </Tabbar>
 </template>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component'
+import { Tabbar, TabbarItem } from 'vant'
 
-#nav {
-  padding: 30px;
+@Options({
+  components: {
+    Tabbar,
+    TabbarItem,
+  },
+})
+export default class App extends Vue {}
+</script>
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-</style>
+<style lang="less"></style>
