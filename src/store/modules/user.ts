@@ -1,16 +1,20 @@
+import { Module } from 'vuex'
+import router from '@/router'
 import { login, fetchUserInfo, logout } from '@/api/user'
+
+export interface UserState {
+  token: string
+  info: Record<string, string | number>
+}
 
 const user = {
   state: {
     token: '',
+    info: {},
   },
-
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
-    },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
     },
     SET_INFO: (state, info) => {
       state.info = info
@@ -23,8 +27,10 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo)
           .then(response => {
-            const result = response.result
+            // @ts-ignore
+            const result = response.data
             commit('SET_TOKEN', result.token)
+            router.push({ name: 'Home' })
             resolve(response)
           })
           .catch(error => {
@@ -38,29 +44,9 @@ const user = {
       return new Promise((resolve, reject) => {
         fetchUserInfo()
           .then(response => {
-            const result = response.result
-            if (result.role && result.role.permissions.length > 0) {
-              const role = result.role
-              role.permissions = result.role.permissions
-              role.permissions.map(per => {
-                if (
-                  per.actionEntitySet != null &&
-                  per.actionEntitySet.length > 0
-                ) {
-                  const action = per.actionEntitySet.map(action => {
-                    return action.action
-                  })
-                  per.actionList = action
-                }
-              })
-              role.permissionList = role.permissions.map(permission => {
-                return permission.permissionId
-              })
-              commit('SET_ROLES', result.role)
-              commit('SET_INFO', result)
-            } else {
-              reject(new Error('getInfo: roles must be a non-null array !'))
-            }
+            // @ts-ignore
+            const result = response.data
+            commit('SET_INFO', result)
             resolve(response)
           })
           .catch(error => {
@@ -86,4 +72,4 @@ const user = {
   },
 }
 
-export default user
+export default user as Module<UserState, Record<string, unknown>>

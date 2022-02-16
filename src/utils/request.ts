@@ -80,7 +80,7 @@ const errorHandler = error => {
     error.message = '连接到服务器失败，请联系管理员'
   }
   Toast(error.message)
-  store.dispatch('clearAuth')
+  // store.dispatch('clearAuth')
   return Promise.reject(error)
 }
 
